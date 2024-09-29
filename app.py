@@ -16,7 +16,7 @@ def get_learning_path():
     data = request.get_json()
     print(data)
 
-@app.route('/api/ask_doubts', methods=['POST'])
+@app.route('/api/ask_doubt', methods=['POST'])
 def ask_doubts():
     data = request.get_json()
     print(data)
