@@ -54,11 +54,12 @@ def get_learning_path():
 def ask_doubts():
     try:
         data = request.get_json()
-        print(data)
         doubt = data['doubt']
         response = answer_doubt(doubt)
 
-        return jsonify({"response": response})
+        return jsonify({
+            "response": response
+        })
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({
