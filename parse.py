@@ -1,21 +1,19 @@
 import os
 import shutil
 import pdfplumber
-import pandas as pd
 import logging
 import warnings
 
-from dotenv import load_dotenv
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain.vectorstores.chroma import Chroma
 warnings.filterwarnings("ignore")
 
-CHROMA_PATH = "chroma"
-DATA_PATH = "data"
+from dotenv import load_dotenv
 load_dotenv()
+os.environ["OPENAI_API_KEY"] = os.getenv("OPENAI_API")
 
-OPENAI_API_KEY = os.getenv("OPENAI_API")
+CHROMA_PATH = "chroma"
 
 logname = 'chromadb_log.log'  # Specify the log file name
 logging.basicConfig(filename=logname,
@@ -59,7 +57,7 @@ def save_to_chroma(chunks):
         shutil.rmtree(CHROMA_PATH)
 
     try:
-        embedding_function = OpenAIEmbeddings(openai_api_key=OPENAI_API_KEY)
+        embedding_function = OpenAIEmbeddings()
         db = Chroma.from_documents(chunks, embedding_function, persist_directory=CHROMA_PATH)
 
         db.persist()
