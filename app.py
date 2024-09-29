@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from parse import extract_content, chunk_text, save_to_chroma
+from parse import extract_content, chunk_text, save_to_chroma, delete_chroma
 from summarise_and_quiz import get_summary_and_quiz
 from doubt import answer_doubt
 from dotenv import load_dotenv
@@ -16,6 +16,7 @@ def upload_file():
     try:
         if 'pdf' not in request.files:
             return jsonify({"error": "No file part"})
+        delete_chroma()
         pdf = request.files['pdf']
         pdf.save("public/file.pdf")
     
@@ -33,8 +34,8 @@ def upload_file():
 @app.route('/api/get_learning_path', methods=['POST'])
 def get_learning_path():
     try:
-        print(request.get_json())
-        difficulty_level = 'easy'
+        data = request.get_json()
+        difficulty_level = data['difficulty']
         document_text = extract_content("public/file.pdf")
         chunks = chunk_text(document_text)
         save_to_chroma(chunks)
@@ -51,12 +52,18 @@ def get_learning_path():
 
 @app.route('/api/ask_doubt', methods=['POST'])
 def ask_doubts():
-    data = request.get_json()
-    print(data)
-    doubt = data['doubt']
-    response = answer_doubt(doubt)
+    try:
+        data = request.get_json()
+        print(data)
+        doubt = data['doubt']
+        response = answer_doubt(doubt)
 
-    return jsonify({"response": response})
+        return jsonify({"response": response})
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({
+            "error": str(e)
+        })
 
 
 if __name__ == '__main__':

@@ -52,9 +52,15 @@ def chunk_text(text):
     chunks = text_splitter.create_documents(text_splitter.split_text(text))
     return chunks
 
+def delete_chroma():
+    if os.path.exists(CHROMA_PATH):
+        shutil.rmtree(CHROMA_PATH)
+        os.remove(CHROMA_PATH)
+
 def save_to_chroma(chunks):
     if os.path.exists(CHROMA_PATH):
         shutil.rmtree(CHROMA_PATH)
+        os.remove(CHROMA_PATH)
 
     try:
         embedding_function = OpenAIEmbeddings()
