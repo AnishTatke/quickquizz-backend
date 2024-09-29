@@ -2,5 +2,6 @@
 
 /public
 /chroma
+/__pycache__
 
 *.log
