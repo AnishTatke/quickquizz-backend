@@ -1,7 +1,7 @@
 import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from parse import extract_content, chunk_text, save_to_chroma, delete_chroma
+from parse import extract_content, chunk_text, save_to_chroma, delete_chroma, create_dir
 from summarise_and_quiz import get_summary_and_quiz
 from doubt import answer_doubt
 from dotenv import load_dotenv
@@ -18,6 +18,7 @@ def upload_file():
             return jsonify({"error": "No file part"})
         delete_chroma()
         pdf = request.files['pdf']
+        create_dir("public")
         pdf.save("public/file.pdf")
     
         return jsonify({

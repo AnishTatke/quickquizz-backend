@@ -52,6 +52,10 @@ def chunk_text(text):
     chunks = text_splitter.create_documents(text_splitter.split_text(text))
     return chunks
 
+def create_dir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+
 def delete_chroma():
     if os.path.exists(CHROMA_PATH):
         shutil.rmtree(CHROMA_PATH)
